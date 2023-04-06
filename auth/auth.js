@@ -1,4 +1,5 @@
 const home = require('../user-db.js')
+const jwt = require('jsonwebtoken')
 
 exports.register = async (req, res, next) => {
 
@@ -9,7 +10,9 @@ exports.register = async (req, res, next) => {
   }
 
   try {
-    home.createUser(username, password, role)
+    bcrypt.hash(password, 10).then(async (hash) => {
+      home.createUser(username, hash, role)
+    })
 
     res.status(200).json({
         message: "User successfully created"
